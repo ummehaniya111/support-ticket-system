@@ -16,14 +16,18 @@ app = Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# Render writable folders
-instance_path = os.path.join(basedir, "instance")
-os.makedirs(instance_path, exist_ok=True)
+# Render persistent disk folder
+render_disk = os.path.join(basedir, ".render")
+os.makedirs(render_disk, exist_ok=True)
+
+db_path = os.path.join(render_disk, "site.db")
+
+
 
 upload_path = os.path.join(basedir, "uploads")
 os.makedirs(upload_path, exist_ok=True)
 
-db_path = os.path.join(instance_path, "site.db")
+
 
 
 # ======================================================
@@ -53,6 +57,7 @@ login_manager.login_view = "login"
 
 with app.app_context():
     db.create_all()
+
 
 
 # ======================================================
