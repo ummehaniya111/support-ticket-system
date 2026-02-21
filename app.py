@@ -40,7 +40,8 @@ from models import *
 
 @app.route("/")
 def home():
-    return "<h2>Support Ticket System Running</h2>"
+    return redirect(url_for("login"))
+
 
 @login_manager.user_loader
 def load_user(user_id):
