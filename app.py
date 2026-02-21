@@ -18,20 +18,20 @@ app = Flask(__name__)
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
-# create instance folder FIRST
-instance_path = os.path.join(basedir, "instance")
-os.makedirs(instance_path, exist_ok=True)
-
-# choose db path (Render vs Local)
+# Render provides persistent disk at /var/data
 if os.environ.get("RENDER"):
-    db_file = os.path.join(instance_path, "site.db")
+    db_path = "/var/data/site.db"
 else:
-    db_file = os.path.join(basedir, "site.db")
+    db_path = os.path.join(basedir, "site.db")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + db_file
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_path
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['SECRET_KEY'] = 'secret123'
+
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
 
 
 # app.config['SECRET_KEY'] = 'secret123'
@@ -41,17 +41,7 @@ app.config['SECRET_KEY'] = 'secret123'
 # create uploads folder
 upload_path = os.path.join(basedir, "uploads")
 os.makedirs(upload_path, exist_ok=True)
-
 app.config["UPLOAD_FOLDER"] = upload_path
-
-
-
-db.init_app(app)
-# import os
-
-with app.app_context():
-    db.create_all()
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
