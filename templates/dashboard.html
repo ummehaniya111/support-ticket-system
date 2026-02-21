@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Your Tickets</h2>
+
+<a href="/create_ticket">Create New Ticket</a>
+
+<hr>
+
+{% for ticket in tickets %}
+<div class="card ticket-card">
+    <span class="status {{ ticket.status|lower|replace(' ', '-') }}">
+        {{ ticket.status }}
+    </span>
+
+    <h3>{{ ticket.title }}</h3>
+    <p>{{ ticket.description }}</p>
+
+    {% if ticket.attachment %}
+        <a href="/uploads/{{ ticket.attachment }}" target="_blank">View Attachment</a>
+    {% endif %}
+</div>
+{% else %}
+<p>No tickets yet</p>
+{% endfor %}
+
+{% endblock %}

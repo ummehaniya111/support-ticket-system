@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Support Ticket System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert">
+      {% for msg in messages %}
+        <p>{{ msg }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+    <h2>Support Desk</h2>
+{% if current_user.is_authenticated %}
+    <a href="/dashboard">Dashboard</a>
+    {% if current_user.role == 'admin' %}
+        <a href="/admin">Admin Panel</a>
+    {% endif %}
+    <a href="/logout">Logout</a>
+{% else %}
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+{% endif %}
+
+</div>
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

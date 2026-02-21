@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card form-box">
+<h2>Register</h2>
+
+<form method="POST">
+    <label>Username</label><br>
+    <input name="username"><br><br>
+
+    <label>Email</label><br>
+    <input name="email"><br><br>
+
+    <label>Password</label><br>
+    <input type="password" name="password"><br><br>
+
+    <button type="submit">Register</button>
+</form>
+
+<p>Already have account? <a href="/login">Login</a></p>
+</div>
+{% endblock %}

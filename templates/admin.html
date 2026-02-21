@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Admin Panel</h2>
+
+{% for ticket in tickets %}
+<div class="card">
+    <h3>{{ ticket.title }}</h3>
+    <p>{{ ticket.description }}</p>
+    <b>User:</b> {{ ticket.author.username }}<br>
+    <span class="status {{ ticket.status|lower|replace(' ', '-') }}">
+    {{ ticket.status }}
+</span>
+
+
+    <form method="POST" action="/update_status/{{ ticket.id }}">
+       <select name="status">
+    <option value="Open" {% if ticket.status == "Open" %}selected{% endif %}>Open</option>
+    <option value="In Progress" {% if ticket.status == "In Progress" %}selected{% endif %}>In Progress</option>
+    <option value="Closed" {% if ticket.status == "Closed" %}selected{% endif %}>Closed</option>
+</select>
+        <button type="submit">Update</button>
+    </form>
+</div>
+{% endfor %}
+
+{% endblock %}
