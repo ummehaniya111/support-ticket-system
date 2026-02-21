@@ -17,13 +17,20 @@ from flask import send_from_directory
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'secret123'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 UPLOAD_FOLDER = "uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
 db.init_app(app)
+import os
+
+with app.app_context():
+    if not os.path.exists("instance/site.db"):
+        os.makedirs("instance", exist_ok=True)
+        db.create_all()
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
