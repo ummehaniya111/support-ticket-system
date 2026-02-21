@@ -6,7 +6,7 @@ from extensions import db
 from flask_login import LoginManager
 from models import User
 from models import Ticket
-import os
+# import os
 from werkzeug.utils import secure_filename
 from flask import send_from_directory
 
@@ -15,21 +15,42 @@ from flask import send_from_directory
 
 
 app = Flask(__name__)
+import os
 
-app.config['SECRET_KEY'] = 'secret123'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/site.db'
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+# create instance folder FIRST
+instance_path = os.path.join(basedir, "instance")
+os.makedirs(instance_path, exist_ok=True)
+
+# choose db path (Render vs Local)
+if os.environ.get("RENDER"):
+    db_file = os.path.join(instance_path, "site.db")
+else:
+    db_file = os.path.join(basedir, "site.db")
+
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + db_file
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-UPLOAD_FOLDER = "uploads"
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config['SECRET_KEY'] = 'secret123'
+
+
+# app.config['SECRET_KEY'] = 'secret123'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/site.db'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# create uploads folder
+upload_path = os.path.join(basedir, "uploads")
+os.makedirs(upload_path, exist_ok=True)
+
+app.config["UPLOAD_FOLDER"] = upload_path
+
 
 
 db.init_app(app)
-import os
+# import os
 
 with app.app_context():
-    if not os.path.exists("instance/site.db"):
-        os.makedirs("instance", exist_ok=True)
-        db.create_all()
+    db.create_all()
 
 login_manager = LoginManager()
 login_manager.init_app(app)
